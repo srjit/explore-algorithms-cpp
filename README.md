@@ -1,1 +1,1 @@
-# exlpore-algorithms-cpp
+# explore-algorithms-cpp
