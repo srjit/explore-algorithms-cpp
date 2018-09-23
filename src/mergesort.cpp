@@ -60,6 +60,4 @@ int main(){
     std :: cout << input[i];
   }
   
-
-  
 }
