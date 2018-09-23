@@ -1,0 +1,94 @@
+\documentclass{article}
+%\usepackage[utf8]{inputenc}
+\usepackage[a4paper, total={7in, 8in}]{geometry}
+\usepackage{spverbatim}
+\usepackage{minted}
+\usepackage{amsmath}
+
+
+\title{EECE 7204-Assignment1}
+\author{Sreejith Sreekumar}
+\date{\today}
+\begin{document}
+
+\maketitle
+\section{Coding}
+\subsection{Insertion Sort}
+
+\begin{minted}{C++}
+
+#include <iostream>
+
+void insertion_sort(int input[], int limit){
+
+  int i, j, temp;
+  for (i=0; i< limit; i++){
+    for (j=i ;j>=0; j--){
+      if(input[j] < input[j-1]){
+    	temp = input[j];
+	    input[j] = input[j-1];
+	    input[j-1] = temp;
+      }
+    }
+  }
+  return input;
+}
+
+int main(){
+
+  int limit, i;
+
+  std :: cout <<"Enter limit";
+  std :: cin>> limit;
+
+  int* input = new int[limit];
+  std :: cout <<"Enter array to sort";
+  for (i=0; i< limit; i++){
+    std :: cin >> input[i];
+  }
+
+  insertion_sort(input, limit);
+}
+\end{minted}
+
+\subsection{Merge Sort}
+
+\section{Arrangement of Elements during Sorting}
+\subsection{Insertion Sort}
+\begin{minted}{Python}
+Input: {10, 5, 7, 9, 8, 3}
+Iteration 1: {5, 10, 7, 9, 8, 3}
+Iteration 2: {5, 7, 10, 9, 8, 3}
+Iteration 3: {5, 7, 9, 10, 8, 3}
+Iteration 4: {5, 7, 9, 8, 10, 3}
+             {5, 7, 8, 9, 10, 3}
+Iteration 5: {5, 7, 8, 9, 3, 10}
+             {5, 7, 8, 3, 9, 10}
+             {5, 7, 3, 8, 9, 10}
+             {5, 3, 7, 8, 9, 10}
+             {3, 5, 7, 8, 9, 10}
+\end{minted}
+
+\subsection{Quicksort}
+Input: {10, 5, 7, 9, 8, 3}
+Iteration 1: {10, }
+
+\section{True or False}
+
+\begin{itemize}
+
+\item n + 3 \in \Omega(n) - False
+
+\item n + 3 \in \Omega(n^2) - True
+
+\item n + 3 \in \Theta(n^{2}) - False
+
+\item 2^{n+1} \in \mathcal{O}(n + 1) - False
+
+\item 2^{n+1} \in \Theta(2^{n}) - True
+
+\end{itemize}
+
+\section{Master Method}
+
+\end{document}
