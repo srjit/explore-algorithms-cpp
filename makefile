@@ -1,21 +1,15 @@
 CC=gcc
 CXX=g++
-RM=rm -f
+RM=rm
 
-SRCS=insertion.cc
-OBJS=$(subst .cc,.o,$(SRCS))
+SRCS=src/insertion.cc src/mergesort.cpp
 
-all: tool
+all: sorts
 
-tool: $(OBJS)
-    $(CXX) -o $(OBJS)
-
-# tool.o: tool.cc support.hh
-
-# support.o: support.hh support.cc
+sorts: $(SRCS)
+	mkdir -p bin
+	g++ -o bin/insertion src/insertion.cc
+	g++ -o bin/merge src/mergesort.cpp
 
 clean:
-    $(RM) $(OBJS)
-
-distclean: clean
-    $(RM) tool
+	$(RM) -rf bin
