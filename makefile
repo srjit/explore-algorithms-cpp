@@ -9,7 +9,7 @@ all: sorts
 sorts: $(SRCS)
 	mkdir -p bin
 	g++ -o bin/insertion src/insertion.cc
-	g++ -o bin/merge src/mergesort.cpp
+	g++ -o bin/merge src/mergesort.cpp -std=c++14
 
 clean:
 	$(RM) -rf bin
