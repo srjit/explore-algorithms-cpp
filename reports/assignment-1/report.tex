@@ -3,6 +3,8 @@
 \usepackage[a4paper, total={7in, 8in}]{geometry}
 \usepackage{spverbatim}
 \usepackage{minted}
+\usepackage{amssymb}
+
 \usepackage{amsmath}
 
 
@@ -16,42 +18,173 @@
 \subsection{Insertion Sort}
 
 \begin{minted}{C++}
-
 #include <iostream>
+#include <time.h>
 
-void insertion_sort(int input[], int limit){
 
+int *get_input(int limit){
+  
+   /**
+    * Generating input - Worst case happens when the array is sorted in
+    * reverse order. Sending numbers from 1000 to limit 
+    * decrementing by 1 for every element.
+    */
+    
+  int* input = new int[limit];
+
+  int j = 0;
+  for(int i=1000; i>1000-limit; i--){
+    input[j] = i;
+    j+=1;
+  }
+  return input;
+}
+
+
+int *insertion_sort(int input[], int limit){
+  
+   /**
+    * Insertion sort algorithm
+    */
+    
   int i, j, temp;
   for (i=0; i< limit; i++){
     for (j=i ;j>=0; j--){
       if(input[j] < input[j-1]){
-    	temp = input[j];
-	    input[j] = input[j-1];
-	    input[j-1] = temp;
+	temp = input[j];
+	input[j] = input[j-1];
+	input[j-1] = temp;
       }
     }
   }
   return input;
 }
 
+
 int main(){
 
   int limit, i;
-
-  std :: cout <<"Enter limit";
+  std :: cout <<"Enter limit: ";
   std :: cin>> limit;
 
-  int* input = new int[limit];
-  std :: cout <<"Enter array to sort";
-  for (i=0; i< limit; i++){
-    std :: cin >> input[i];
-  }
+  int* input = get_input(limit);
+  
+  /*
+   * Setting clocks before and after the sorting
+   */
+  clock_t start = clock();
+  int* sorted_array = insertion_sort(input, limit);
+  clock_t end = clock();
 
-  insertion_sort(input, limit);
+  double cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+
+  printf("Insertion Sort took %f seconds to finish \n", cpu_time_used);
+  
 }
+
 \end{minted}
 
 \subsection{Merge Sort}
+\begin{minted}{C++}
+#include <iostream>
+#include <time.h>
+
+int *get_input(int limit){
+
+   /**
+    * Generating input - Worst case - Sending numbers from 1000 to limit 
+    * decrementing by 1 for every element.
+    */
+    
+  int* input = new int[limit];
+
+  int j = 0;
+  for(int i=1000; i>1000-limit; i--){
+    input[j] = i;
+    j+=1;
+  }
+  return input;
+}
+
+
+void copy_merged_array_into_original(int original[], int merged[], int length, int left_low) {
+
+    for (int i=0; i< length; ++i)
+        original[left_low++] = merged[i];
+        
+}
+
+
+void merge(int input[], int left_low, int left_high, int right_low, int right_high) {
+
+    int length = right_high-left_low+1;
+    int merged_array[length];
+    int left = left_low;
+    int right = right_low;
+
+    auto left_array_exhausted = [&left, &left_high]() { return left > left_high;};
+    auto right_array_exhausted = [&right, &right_high]() { return right > right_high;};
+
+    for (int i = 0; i < length; ++i) {
+        if (left_array_exhausted())
+            merged_array[i] = input[right++];
+        else if (right_array_exhausted())
+            merged_array[i] = input[left++];
+        else if (input[left] <= input[right])
+            merged_array[i] = input[left++];
+        else
+            merged_array[i] = input[right++];
+    }
+    copy_merged_array_into_original(input,  merged_array, length, left_low);
+
+}
+
+
+void merge_sort(int numbers[], int low, int high) {
+
+    if (low >= high)
+        return;
+
+    else {
+    
+        /*
+         * Recursive sorting and merging parts
+         */
+         
+        int mid = (low + high)/2;
+        merge_sort(numbers, low, mid);
+        merge_sort(numbers, mid+1, high);
+        merge(numbers, low, mid, mid+1, high);
+    }
+
+}
+
+
+int main(){
+
+
+    int limit;
+    
+    std :: cout << "Enter limit: ";
+    std :: cin >> limit;
+
+    int* input = get_input(limit);
+    std :: cout << "Sorting using mergesort: ";
+    
+  /*
+   * Setting clocks before and after the sorting
+   */    
+    clock_t start = clock();
+    merge_sort(input, 0, limit-1);
+    clock_t end = clock();
+
+    double cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+    printf("Merge Sort took %f seconds to finish \n", cpu_time_used);
+
+
+}
+
+\end{minted}
 
 \section{Arrangement of Elements during Sorting}
 \subsection{Insertion Sort}
@@ -71,24 +204,83 @@ Iteration 5: {5, 7, 8, 9, 3, 10}
 
 \subsection{Quicksort}
 Input: {10, 5, 7, 9, 8, 3}
-Iteration 1: {10, }
+Iteration 1: {10}
 
 \section{True or False}
 
 \begin{itemize}
+\item n + 3 $\in$ $\Omega$(n) - True, n+3 is lower bounded by $\Omega$(n)
 
-\item n + 3 \in \Omega(n) - False
+\item n + 3 $\in$ $\Omega(n^{2})$ - False, n+3 is not lower bounded by $\Omega(n^{2})$
 
-\item n + 3 \in \Omega(n^2) - True
+\item n + 3 $\in$ $\Theta(n^{2})$ - False
 
-\item n + 3 \in \Theta(n^{2}) - False
+\item $2^{n+1}$ $\in$ $\mathcal{O}$(n + 1) - False
 
-\item 2^{n+1} \in \mathcal{O}(n + 1) - False
-
-\item 2^{n+1} \in \Theta(2^{n}) - True
+\item $2^{n+1}$ $\in$ $\Theta(2^{n})$ - True
 
 \end{itemize}
 
 \section{Master Method}
+
+\begin{itemize}
+\item T(n) = 8T($\frac{n}{2}$) + n \\ \\
+  Here a = 8, b = 2 and f(n) = n \\
+  Considering Case I of the Master Method, i,e $\mathcal{O}(n^{\log_b {a} - \varepsilon})$ and substituting for a and b, we have: \\
+
+  f(n) = n = $\mathcal{O}(n^{\log_2 {8} - \varepsilon})$ =  $\mathcal{O}(n^{3 - \varepsilon})$ \\
+
+  For $\varepsilon$ = 1, we have f(n) = $\mathcal{O}(n^{2})$, which satisfies Case I \\
+
+  $\therefore$ T(n) = $\Theta(n^{\log_b {a}})$ = $\Theta(n^{3})$
+
+
+
+\item T(n) = 8T($\frac{n}{2}$) + $n^{2}$ \\ \\
+  Here a = 8, b = 2 and f(n) = $n^{2}$ \\
+  Considering Case II of the Master Method, i,e $\Theta(n^{\log_b {a}})$ and substituting for a and b, we have: \\
+
+  f(n) = $n^{2}$ = $\Theta(n^{\log_2 {8}})$ =  $\Theta(n^{3})$, which satisfies Case II \\
+
+  $\therefore$ T(n) = $\Theta(n^{\log_b {a}} . log^{k+1} .n)$ = $\Theta(n^{3}.log\ n)$
+
+  
+\item T(n) = 8T($\frac{n}{2}$) + $n^{3}$ \\ \\
+
+  Here a = 8, b = 2 and f(n) = $n^{3}$ \\
+  Considering Case III of the Master Method, i,e $\Theta(n^{\log_b {a}})$ and substituting for a and b, we have: \\
+
+  \begin{equation}
+    f(n) = n^{3} = \Omega(n^{\log_2 {8} + \varepsilon}) =  \Omega(n^{3 + \varepsilon})   \\
+  \end{equation}
+
+  and,
+  
+  \begin{equation}
+    8.f(\frac{n}{2}) \leq (1 - \varepsilon^{\prime}).n^{3}
+   \end{equation}
+
+  \begin{equation}
+  \implies 8.\frac{n^{3}}{8 } \leq (1 - \varepsilon^{\prime}).n^{3}
+  \end{equation}
+
+  \begin{equation}
+  \implies n^{3} \leq (1 - \varepsilon^{\prime}).n^{3}
+  \end{equation}
+  
+  (4) is true for many $\varepsilon^{\prime}s$ $>$ 0
+
+  From (1) and (4) Master Method Case III is satisfied.
+
+  $\therefore$ T(n) = $\Theta$(f(n)) = $\Theta(n^{3})$
+
+\item T(n) = 8T($\frac{n}{2}$) + $n^{4}$ \\ \\
+
+  Here a = 8, b = 2 and f(n) = $n^{3}$ \\
+  Considering Case III of the Master Method, i,e $\Theta(n^{\log_b {a}})$ and substituting for a and b, we have: \\
+  
+
+  
+\end{itemize}
 
 \end{document}

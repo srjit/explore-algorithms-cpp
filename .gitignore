@@ -36,6 +36,9 @@
 *.aux
 *.log
 *.pyg
+*.pygtex
 *.*~
 
 *.CMakeCache.txt
+
+

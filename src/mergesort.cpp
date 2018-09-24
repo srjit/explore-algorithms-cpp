@@ -22,7 +22,7 @@ void copy_merged_array_into_original(int original[], int merged[], int length, i
         original[left_low++] = merged[i];
 }
 
-void merge(int a[], int left_low, int left_high, int right_low, int right_high) {
+void merge(int input[], int left_low, int left_high, int right_low, int right_high) {
 
     int length = right_high-left_low+1;
     int merged_array[length];
@@ -34,15 +34,15 @@ void merge(int a[], int left_low, int left_high, int right_low, int right_high) 
 
     for (int i = 0; i < length; ++i) {
         if (left_array_exhausted())
-            merged_array[i] = a[right++];
+            merged_array[i] = input[right++];
         else if (right_array_exhausted())
-            merged_array[i] = a[left++];
-        else if (a[left] <= a[right])
-            merged_array[i] = a[left++];
+            merged_array[i] = input[left++];
+        else if (input[left] <= input[right])
+            merged_array[i] = input[left++];
         else
-            merged_array[i] = a[right++];
+            merged_array[i] = input[right++];
     }
-    copy_merged_array_into_original(a,  merged_array, length, left_low);
+    copy_merged_array_into_original(input,  merged_array, length, left_low);
 
 }
 
@@ -83,8 +83,5 @@ int main(){
 
     printf("Merge Sort took %f seconds to finish \n", cpu_time_used);
 
-    for(int i = 0; i< limit; i++){
-        std :: cout << input[i] << " ";
-    }
 
 }
