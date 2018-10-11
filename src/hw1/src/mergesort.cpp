@@ -17,7 +17,7 @@ int *get_input(int limit){
 
 
 
-void copy_merged_array_into_original(int original[], int merged[], int length, int left_low) {
+void copyMergedArrays(int original[], int merged[], int length, int left_low) {
     for (int i=0; i< length; ++i)
         original[left_low++] = merged[i];
 }
@@ -42,7 +42,7 @@ void merge(int input[], int left_low, int left_high, int right_low, int right_hi
         else
             merged_array[i] = input[right++];
     }
-    copy_merged_array_into_original(input,  merged_array, length, left_low);
+    copyMergedArrays(input,  merged_array, length, left_low);
 
 }
 
@@ -83,5 +83,9 @@ int main(){
 
     printf("Merge Sort took %f seconds to finish \n", cpu_time_used);
 
-
 }
+
+
+
+
+

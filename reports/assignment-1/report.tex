@@ -4,12 +4,15 @@
 \usepackage{spverbatim}
 \usepackage{minted}
 \usepackage{amssymb}
+\usepackage{bm}
+\usepackage{graphicx}
 
 \usepackage{amsmath}
+\usepackage{halloweenmath}
 
 
-\title{EECE 7204-Assignment1}
-\author{Sreejith Sreekumar}
+\title{EECE 7205-Assignment1}
+\author{Sreejith Sreekumar: 001277209}
 \date{\today}
 \begin{document}
 
@@ -78,7 +81,7 @@ int main(){
 
   double cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
 
-  printf("Insertion Sort took %f seconds to finish \n", cpu_time_used);
+  std::cout<< "Insertion Sort took %f seconds to finish \n" << cpu_time_used;
   
 }
 
@@ -179,12 +182,24 @@ int main(){
     clock_t end = clock();
 
     double cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
-    printf("Merge Sort took %f seconds to finish \n", cpu_time_used);
-
+    cout << "Merge Sort took %f seconds to finish \n" << cpu_time_used;
 
 }
 
 \end{minted}
+
+
+\pagebreak
+
+\subsection{Worst Case Running Times}
+
+Experimenting using the above code fragments which sorts using insertion and mergesort for different values of 'n' at their worst cases, we have:
+at \textbf{n=43}, mergesort starts to beat insertion sort (ref. Figure 1).
+
+\begin{figure}
+\includegraphics[width=10cm]{expt.png}
+\caption{Sorting Algorithms - Running time experiments}  
+\end{figure}
 
 \section{Arrangement of Elements during Sorting}
 \subsection{Insertion Sort}
@@ -200,18 +215,35 @@ Iteration 5: {5, 7, 8, 9, 3, 10}
              {5, 7, 3, 8, 9, 10}
              {5, 3, 7, 8, 9, 10}
              {3, 5, 7, 8, 9, 10}
+             
+  Final    : {3, 5, 7, 8, 9, 10}             
 \end{minted}
 
 \subsection{Quicksort}
-Input: {10, 5, 7, 9, 8, 3}
-Iteration 1: {10}
+Input: {10, 5, 7, 9, 8, 3} \\
+\begin{minted}{Python}
+  Pivot: 10
+  
+  Iteration 1: {->10, 5, 7, 9, 8, 3}
+              Exchange Pivot
+               {3, 5, 7, 9, 8, 10}
+  Iteration 2: {->3, 5, 7, 9, 8, 10}
+  Iteration 3: {3, ->5, 7, 9, 8, 10}
+  Iteration 4: {3, ->5, 7, 9, 8, 10}
+  Iteration 5: {3, 5, ->7, 9, 8, 10}
+  Iteration 6: {3, 5, 7, ->9, 8, 10}
+              Exchange Pivot
+              {3, 5, 7, 8, 9, 10}
+              
+  Final      : {3, 5, 7, 8, 9, 10}
+\end{minted}
 
 \section{True or False}
 
 \begin{itemize}
-\item n + 3 $\in$ $\Omega$(n) - True, n+3 is lower bounded by $\Omega$(n)
+\item n + 3 $\in$ $\Omega$(n) - True
 
-\item n + 3 $\in$ $\Omega(n^{2})$ - False, n+3 is not lower bounded by $\Omega(n^{2})$
+\item n + 3 $\in$ $\mathcal{O}(n^{2})$ - True
 
 \item n + 3 $\in$ $\Theta(n^{2})$ - False
 
@@ -226,7 +258,7 @@ Iteration 1: {10}
 \begin{itemize}
 \item T(n) = 8T($\frac{n}{2}$) + n \\ \\
   Here a = 8, b = 2 and f(n) = n \\
-  Considering Case I of the Master Method, i,e $\mathcal{O}(n^{\log_b {a} - \varepsilon})$ and substituting for a and b, we have: \\
+  Considering Case I of the Master Method, i.e $\mathcal{O}(n^{\log_b {a} - \varepsilon})$ and substituting for a and b, we have: \\
 
   f(n) = n = $\mathcal{O}(n^{\log_2 {8} - \varepsilon})$ =  $\mathcal{O}(n^{3 - \varepsilon})$ \\
 
@@ -236,51 +268,87 @@ Iteration 1: {10}
 
 
 
+
 \item T(n) = 8T($\frac{n}{2}$) + $n^{2}$ \\ \\
   Here a = 8, b = 2 and f(n) = $n^{2}$ \\
-  Considering Case II of the Master Method, i,e $\Theta(n^{\log_b {a}})$ and substituting for a and b, we have: \\
+  Considering Case I of the Master Method, i.e $\mathcal{O}(n^{\log_b {a} - \varepsilon})$ and substituting for a and b, we have: \\
 
-  f(n) = $n^{2}$ = $\Theta(n^{\log_2 {8}})$ =  $\Theta(n^{3})$, which satisfies Case II \\
+  f(n) = $n^{2}$ = $\mathcal{O}(n^{\log_2 {8} - \varepsilon})$ =  $\mathcal{O}(n^{3 - \varepsilon})$, which satisfies Case I \\
 
-  $\therefore$ T(n) = $\Theta(n^{\log_b {a}} . log^{k+1} .n)$ = $\Theta(n^{3}.log\ n)$
+  $\therefore$ T(n) = $\Theta(n^{\log_b {a}})$ = $\Theta(n^{3})$
+
+
+
+
+\item T(n) = 8T($\frac{n}{2}$) + $n^{3}$ \\ \\
+  Here a = 8, b = 2 and f(n) = $n^{3}$ \\
+  Considering Case II of the Master Method, i.e $\Theta(n^{\log_b {a}})$ and substituting for a and b, we have: \\
+
+  f(n) = $n^{3}$ = $\Theta(n^{\log_2 {8}})$ =  $\Theta(n^{3})$, which satisfies Case II \\
+
+  $\therefore$ T(n) = $\Theta(n^{\log_b {a}}.log n)$ = $\Theta(n^{3} log n)$
+  
+
 
   
-\item T(n) = 8T($\frac{n}{2}$) + $n^{3}$ \\ \\
+\item T(n) = 8T($\frac{n}{2}$) + $n^{4}$ \\ \\
 
-  Here a = 8, b = 2 and f(n) = $n^{3}$ \\
-  Considering Case III of the Master Method, i,e $\Theta(n^{\log_b {a}})$ and substituting for a and b, we have: \\
+  Here a = 8, b = 2 and f(n) = $n^{4}$ \\
+  Considering Case III of the Master Method, i,e $\Omega(n^{\log_b {a} + \varepsilon})$ and substituting for a and b, we have: \\
 
   \begin{equation}
-    f(n) = n^{3} = \Omega(n^{\log_2 {8} + \varepsilon}) =  \Omega(n^{3 + \varepsilon})   \\
+    f(n) = n^{4} = \Omega(n^{\log_2 {8} + \varepsilon}) =  \Omega(n^{3 + \varepsilon})   \\
   \end{equation}
 
   and,
   
   \begin{equation}
-    8.f(\frac{n}{2}) \leq (1 - \varepsilon^{\prime}).n^{3}
+    8.f(\frac{n}{2}) \leq (1 - \varepsilon^{\prime}).n^{4}
    \end{equation}
 
   \begin{equation}
-  \implies 8.\frac{n^{3}}{8 } \leq (1 - \varepsilon^{\prime}).n^{3}
+  \implies 8.\frac{n^{4}}{16} \leq (1 - \varepsilon^{\prime}).n^{4}
   \end{equation}
 
   \begin{equation}
-  \implies n^{3} \leq (1 - \varepsilon^{\prime}).n^{3}
+  \implies \frac{n^{4}}{2} \leq (1 - \varepsilon^{\prime}).n^{4}    
   \end{equation}
   
-  (4) is true for many $\varepsilon^{\prime}s$ $>$ 0
-
+  (1) is true for many $\varepsilon^{\prime}s$ $>$ 1
+  and (4) is true for 0 $<$ $\varepsilon^{\prime}$ $<$ 0.5
+  
   From (1) and (4) Master Method Case III is satisfied.
 
-  $\therefore$ T(n) = $\Theta$(f(n)) = $\Theta(n^{3})$
+  $\therefore$ T(n) = $\Theta$(f(n)) = $\Theta(n^{4})$
 
-\item T(n) = 8T($\frac{n}{2}$) + $n^{4}$ \\ \\
-
-  Here a = 8, b = 2 and f(n) = $n^{3}$ \\
-  Considering Case III of the Master Method, i,e $\Theta(n^{\log_b {a}})$ and substituting for a and b, we have: \\
-  
-
-  
 \end{itemize}
 
+\\
+
+\\
+
+(Happy Halloween \mathwitch)
+
+
+\section{Recursion Tree}
+\includegraphics[width=20cm]{page1.jpg}
+\linebreak
+\pagebreak
+
+\includegraphics[width=20cm]{page2.jpg}
+
+
+
+
 \end{document}
+
+
+
+
+
+
+
+
+
+
+

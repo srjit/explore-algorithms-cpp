@@ -1,15 +1,18 @@
 #include <iostream>
 #include <cstdlib>
-#include <bits/stdc++.h> 
+#include <bits/stdc++.h>
+#include <time.h>
 
 using namespace std;
 
-int random_partition(int* arr, int start, int end)
+int randomPartition(int* arr, int start, int end)
 {
     srand(time(NULL));
+    
     int pivotIdx = start + rand() % (end-start+1);
     int pivot = arr[pivotIdx];
-    swap(arr[pivotIdx], arr[end]); // move pivot element to the end
+    swap(arr[pivotIdx], arr[end]);
+    
     pivotIdx = end;
     int i = start -1;
  
@@ -27,21 +30,38 @@ int random_partition(int* arr, int start, int end)
 }
 
  
-void random_quick_sort(int* arr, int start, int end)
+void randomQuickSort(int* arr, int start, int end)
 {
     if(start < end) {
-        int mid = random_partition(arr, start, end);
-        random_quick_sort(arr, start, mid-1);
-        random_quick_sort(arr, mid+1, end);
+        int mid = randomPartition(arr, start, end);
+        randomQuickSort(arr, start, mid-1);
+        randomQuickSort(arr, mid+1, end);
     }
 }
 
+
 int main()
 {
-    int A[] = {2,5,7,1,10,8,9};
-    random_quick_sort(A, 0,6);
+  int A[100];
 
-    for(int i=0;i<7;i++){
-      cout<<A[i];
-    }
+  for(int i=0;i<100;i++){
+    A[i] = i+1;
+  }
+
+  clock_t start = clock();
+  randomQuickSort(A, 0, 100);
+  clock_t end = clock();    
+
+  cout<<"After sorting: ";
+   for(int i=0;i<100;i++){
+     cout<<A[i]<<"\t";
+   }
+   cout<<"\n";
+
+  double cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+
+  printf("Quicksort took %f seconds to finish \n", cpu_time_used);
+  
+  
+   
 }
