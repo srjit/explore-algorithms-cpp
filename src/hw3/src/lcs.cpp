@@ -8,86 +8,91 @@
 
 using namespace std;
 
-string DNA1;
-string DNA2;
-int n;
+void printLCS(vector<vector<char>> _direction, string _seq1, int i, int j){
+  
+  if(i == 0 || j == 0){
+    return;
+  }
 
-void printLCS(vector<vector<char>> b, string X, int i, int j)
-{
-	// base case for length
-	if(i == 0 || j == 0)
-	{
-		return;
-	}
-	//cout << X[i];
-	if(b[i][j] == '@')
-	{	//diagonal arrow, MATCH
-		printLCS(b, X, i - 1, j - 1);
-		cout << X[i];
-	}
-	else if(b[i][j] == '#')
-	{	//up arrow
-		printLCS(b, X, i - 1, j);
-	}
-	else
-	{	//left arrow
-		printLCS(b, X, i, j - 1);
-	}
+  if(_direction[i][j] == '@'){	//diagonal arrow, match sequence
+    printLCS(_direction, _seq1, i - 1, j - 1);
+    cout << _seq1[i];
+  }
+	
+  else if(_direction[i][j] == '^'){  //up arrow
+    printLCS(_direction, _seq1, i - 1, j);
+  }
+	
+  else{	 //left arrow
+    printLCS(_direction, _seq1, i, j - 1);
+  }
+  
 }
 
-int longestCommonSubsequence(string X, string Y)
-{
-	int m = X.length();
-	n = Y.length();
-	
-	
-	//char b[m+1][n+1];
-	vector<vector<char>> b(m+1, vector<char>(n+1, 0));
-	//char c[m+1][n+1];
-	vector<vector<char>> c(m+1, vector<char>(n+1, 0));
-	
-	for(int i = 0; i <= m; i++)
-	{
-		for(int j = 0; j <= n; j++)
-		{
-			if(i == 0 || j == 0)
-			{	//default fill
-				c[i][j] = 0;
-				b[i][j] = '/';
-			}
-			else if(X[i] == Y[j])
-			{
-				c[i][j] = c[i-1][j-1] + 1;
-				b[i][j] = '@'; //using @ to represent diagonal(up/left) arrow.
-			}
-			else if(c[i-1][j] >= c[i][j-1])
-			{
-				c[i][j] = c[i-1][j];
-				b[i][j] = '#'; //using # to represent the up arrow.
-			}
-			else
-			{
-				c[i][j] = c[i][j-1];
-				b[i][j] = '!'; //using ! to represent the left arrow.
-			}
-		}
-	}
-	
-	//print the LCS
-	printLCS(b, X, X.length(), Y.length());
-	
-	return c[m][n];
-}	
 
-int main()
-{	
-	while(cin >> DNA1 >> DNA2)
-	{
-		//do stuff
-		string space = " ";
-		DNA1.insert(0, space);
-		DNA2.insert(0, space);
-		int seqLen = longestCommonSubsequence(DNA1, DNA2);
-		cout << endl << seqLen - 1 << endl;
-	}
+int longest_common_subsequence(string seq1, string seq2){
+  
+  int m = seq1.length();
+  int n = seq2.length();
+	
+  //B matrix - modeled as vector of vector B[m+1][n+1];
+  vector<vector<char>> direction(m+1, vector<char>(n+1, 0));
+
+  //C matrix - modeled as vector of vector  C[m+1][n+1];
+  vector<vector<char>> magnitude(m+1, vector<char>(n+1, 0));
+	
+  for(int i = 0; i <= m; i++){
+    
+    for(int j = 0; j <= n; j++){
+	
+      if(i == 0 || j == 0) {	//default fill
+	magnitude[i][j] = 0;
+	direction[i][j] = '/';
+      }
+	  
+      else if(seq1[i] == seq2[j]){
+	magnitude[i][j] = magnitude[i-1][j-1] + 1;
+	direction[i][j] = '@'; //using @ to represent diagonal(up/left) arrow.
+      }
+	  
+      else if(magnitude[i-1][j] >= magnitude[i][j-1]){
+	magnitude[i][j] = magnitude[i-1][j];
+	direction[i][j] = '^'; //using # to represent the up arrow.
+      }
+	  
+      else{
+	magnitude[i][j] = magnitude[i][j-1];
+	direction[i][j] = '<'; //using ! to represent the left arrow.
+      }
+    }
+  }
+	
+  printLCS(direction, seq1, seq1.length(), seq2.length());
+	
+  return magnitude[m][n];
+}
+
+
+
+int main(){
+  
+  string sequence1;
+  string sequence2;
+
+
+  cout << "Enter sequence 1: ";
+  cin >> sequence1;
+
+  cout << "Enter sequence 2: ";
+  cin >> sequence2;  
+  // sequence1 = "abcdeeffdd";
+  // sequence2 = "ded";
+  
+  string space = " ";
+  sequence1.insert(0, space);
+  sequence2.insert(0, space);
+
+  int sequenceLength = longest_common_subsequence(sequence1, sequence2);
+  cout << endl << sequenceLength - 1 << endl;
+  
 }

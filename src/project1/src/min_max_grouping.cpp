@@ -3,22 +3,24 @@
 #include <vector>
 
 
-// int* get_input(int limit){
 
-//   int input[] = {3, 9, 7, 8, 2, 6, 5, 10, 1, 7, 6, 4};
-//   return input;
-  
-// }
+int find_index(std::vector<int> max_group, int max_element){
 
+  int index;
+  for(int i=0;i<max_group.size();i++){
+    if(max_group[i] == max_element){
+      index = i;
+      break;
+    }
+				     
+  }
 
-
-
+  return index;
+}
 
 int main(){
 
   int M;
-
-  
   // std :: cout <<"Enter the number of elements in the input array: ";
   // std :: cin>> N;
 
@@ -35,9 +37,12 @@ int main(){
    * Construction of the double array c[i][j]
    */
   int C[M][N];
+  int T[M][N];
+  
   for(int i=0;i<M;i++){
     for(int j=0;j<N;j++){
       C[i][j] = 0;
+      T[i][j] = 0;
     }
   }
 
@@ -58,40 +63,60 @@ int main(){
    * Calculation for other elements
    * 
    */
-
   for(int j=1; j<M; j++){
     for(int i=j; i<N; i++){
 
       std::vector<int> max_group;
+      std::vector<int> k_indices;
       // what is the variation of k?
       for(int k=j-1; k<i; k++ ){
-
+	
 	int element1 = C[j-1][k];
 	int sum_element = 0;
 	for(int m=k+1; m<=i; m++){
 	  sum_element += A[m];
 	}
+
 	int min_element = element1 < sum_element ? element1 : sum_element;
 	max_group.push_back(min_element);
+	k_indices.push_back(k);
+	
       }
 
       //find the maxminum element
       int max_element = *std::max_element(max_group.begin(), max_group.end());
+
+      int index = find_index(max_group, max_element);
+      
+
+      // std::vector<int>::iterator it = std::find(max_group.begin(), max_group.end(), max_element);
+      std::cout<<"Index of k is: "<<index<<"\n";
+      
+      
       max_group.clear();
+      k_indices.clear();
       C[j][i] = max_element;
+      T[j][i] = index;
+      
     }
   }
   
-    std::cout<<"\n";
+  std::cout<<"\n C Matrix \n";
   for(int x=0;x<3;x++){
     for(int y=0;y<12;y++){
       std::cout<<C[x][y]<<"\t";
     }
     std::cout<<"\n";
   }
+
+  std::cout<<"\n T Matrix \n";
+  for(int x=0;x<3;x++){
+    for(int y=0;y<12;y++){
+      std::cout<<T[x][y]<<"\t";
+    }
+    std::cout<<"\n";
+  }
   
-
-
 
   
 }
