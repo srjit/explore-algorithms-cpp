@@ -21,9 +21,6 @@ int find_index(std::vector<int> max_group, int max_element){
 int main(){
 
   int M;
-  // std :: cout <<"Enter the number of elements in the input array: ";
-  // std :: cin>> N;
-
   int N = 12;
   int A[] = {3, 9, 7, 8, 2, 6, 5, 10, 1, 7, 6, 5};  
   
@@ -38,11 +35,13 @@ int main(){
    */
   int C[M][N];
   int T[M][N];
+  int parent[M][N];
   
   for(int i=0;i<M;i++){
     for(int j=0;j<N;j++){
       C[i][j] = 0;
       T[i][j] = 0;
+      parent[i][j] = 0;
     }
   }
 
@@ -69,6 +68,7 @@ int main(){
       std::vector<int> max_group;
       std::vector<int> k_indices;
       // what is the variation of k?
+
       for(int k=j-1; k<i; k++ ){
 	
 	int element1 = C[j-1][k];
@@ -85,19 +85,22 @@ int main(){
 
       //find the maxminum element
       int max_element = *std::max_element(max_group.begin(), max_group.end());
-
       int index = find_index(max_group, max_element);
       
 
       // std::vector<int>::iterator it = std::find(max_group.begin(), max_group.end(), max_element);
-      std::cout<<"Index of k is: "<<index<<"\n";
+      std::cout<<"Index of k is: "<<index + 1<<"\n";
       
       
       max_group.clear();
       k_indices.clear();
-      C[j][i] = max_element;
-      T[j][i] = index;
+
       
+      C[j][i] = max_element;
+      /*
+	This is a weird hack. I have no idea why this works. Fuck me
+      */
+      T[j][i] = index + j;
     }
   }
   
@@ -116,7 +119,10 @@ int main(){
     }
     std::cout<<"\n";
   }
-  
 
+  /**
+   *
+   *
+   **/
   
 }
