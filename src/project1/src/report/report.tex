@@ -9,9 +9,13 @@
 \usepackage{listings}
 \usepackage{amsmath}
 \usepackage{halloweenmath}
+\usepackage{enumitem}
+\usepackage{setspace}
+\usepackage{tabto}
 
+\DeclareMathOperator*{\argmax}{argmax}
 
-\title{EECE 7205-Project 1}
+\title{EECE 7205-Project 1: Max-Min-Grouping}
 \author{Sreejith Sreekumar: 001277209}
 \date{\today}
 \begin{document}
@@ -29,7 +33,46 @@ in such a way that we maximize the miniumum of the sum of these groups.
 The optimal indices at which A could be split into M groups so that we have the maximized the minimum of the group sums.
 
 
-\section{Pseudo Codes}
+\section{Pseudo Code}
+
+\subsection{Max-min-grouping}
+\begin{spacing}{0.005}
+Procedure Max-min-grouping(A, M, N):
+\begin{itemize}[label={}]
+\item // \textit{M is the number of groups, N is the size of A}
+\item Initialize: C[M][N] $\leftarrow$ 0
+\item \quad \quad \quad \quad \quad  T[M][N] $\leftarrow$ 0
+\item \textit{for} j=1:M
+  \begin{itemize} [label={}]
+  \item \textit{for} i=j:N
+    \begin{itemize} [label={}]
+    \item C[j][i] = $max_{(j-1 <= k < i)}$ {min(C[k; j-1], $\sum_{m = k+1}^{i} A[m])$}
+    \item T[j][i] = $\argmax_{(j-1 <= k < i)}$ {min(C[k; j-1], $\sum_{m = k+1}^{i} A[m])$}
+    \end{itemize}
+  \item end
+  \end{itemize}
+\item end
+\item Traceback using T matrix to find the optimal grouping configuration of A
+\item return C[M][N]
+\end{itemize}
+
+\subsection{Steps}
+\begin{itemize}
+\item Receive the input array  and the number of groups into which it has to be partioned.
+\item Apply procedure Max-min-grouping on the array.
+\item Construct the values in the matrices C[M][N]  using the formula $max_{(j-1 <= k < i)}$ {min(C[k; j-1], $\sum_{m = k+1}^{i} A[m])$}.
+\item Construct the values in the matrices T[M][N]  as the values of k that maximizes the function in the previous step.
+  \begin{itemize}
+  \item If minimum value between C[k;j-1] and $\sum_{m = k+1}^{i} A[m])$ for the k that maximized C[j][i], is C[k;j-1], then T[j][i] = k
+  \item If minimum value between C[k;j-1] and $\sum_{m = k+1}^{i} A[m])$ for the k that maximized C[j][i], is $\sum_{m = k+1}^{i} A[m])$, then T[j][i] = k-1
+  \end{itemize}
+\item The value C[M][N] after the procedure is the maximized value of the minimum of the group sums.
+\item Trace back the values in T matrix starting from T[M][N] to find the number of elements in each partition of the output.
+\item The numbers hence traced back represents the starting indices from where the input array has to be partitioned for the optimal output.
+\end{itemize}
+
+\end{spacing}
+
 
 \section{Asymptotic Analysis of the Running Time}
 Analyzing the program we have:\\
@@ -42,7 +85,7 @@ max_{(j-1 <= k < i)} [ min(C[k; j-1], \sum_{m = k+1}^{i} A[m]) ]
 we can see that the program requires two loops that iterate \textit{splits} - M times and \textit{data\_size} - N times.
 for calculating the M x N elements
 
-i.e, Worst case time complexity contributed by the outer loops = M * N \\
+i.e, Worst case time complexity contributed by the outer loops = M x N \\
 
 Now, for calculating every element, there is an inner iteration, which computes the maximum of a group of elements. This is marked by variable \textit{k}
 in the code. In worst case the value of \textit{k} will be N-1. \\
@@ -52,10 +95,10 @@ marked by the variable \textit{m}, which in the worst case iterates N-1 times. \
 
 So, considering these steps together, we can say that the total time complexity of the fragment in the worst case is:
 \[
-  M * N * (N-1) * (N-1) \approx M * N * N * N  \approx M * N^{3}
+  M x N x (N-1) x (N-1) \approx M x N x N x N  \approx M x N^{3}
 \]
 
-Hence, the time complexity of the code written is: M * $N^{3}$
+Hence, the worst case time complexity of the code is: M x $N^{3}$.
 
 \section{Results}
 
@@ -86,6 +129,13 @@ Finding the number of elements to be present in each group
 3	4	5	
 
 Minimum of the sum of groups: 19
+
+Group 1:-
+3	9	7	
+Group 2:-
+8	2	6	5	
+Group 3:-
+2	6	5	10	1
 \end{verbatim}
 
 
@@ -116,9 +166,16 @@ Finding the number of elements to be present in each group
 3	3	3	3
 
 Minimum of the sum of groups: 16
-\end{verbatim}
 
-\pagebreak
+Group 1:-
+3	9	7	
+Group 2:-
+8	2	6	
+Group 3:-
+8	2	6	
+Group 4:-
+8	2	6	
+\end{verbatim}
 
 \subsection{Run 3}
 \begin{verbatim}
@@ -143,6 +200,15 @@ Finding the number of elements to be present in each group
 4	1	1	1
 
 Minimum of the sum of groups: 6
+
+Group 1:-
+1	2	3	4	
+Group 2:-
+5	
+Group 3:-
+2	
+Group 4:-
+2	
 \end{verbatim}
 
 \section{Source Code}
@@ -341,7 +407,25 @@ int main(){
   /**
    * Minimum of the sum of the groups
    */
-  std::cout<<"Minimum of the sum of groups: "<<C[splits - 1][data_size - 1]<<"\n";
+   std::cout<<"Minimum of the sum of groups: "<<C[splits - 1][data_size - 1]<<"\n";
+
+  /**
+   * Print the groups
+   */
+  std::cout<<"\n";
+  int start = 0;
+  for(int i=0; i<groups.size(); i++){
+
+    std::cout<<"Group "<<i+1<<":-\n";
+    int end = groups[i];
+
+    for(int j=start; j<start+end;  j++){
+      std::cout<<data[j]<<"\t";
+    }
+
+    start = end;
+    std::cout<<"\n";
+  }   
 \end{minted}  
 
 \end{document}
