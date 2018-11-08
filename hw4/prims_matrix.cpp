@@ -8,7 +8,7 @@ int get_min_key(int key[], int priority_queue[], int vertex_count){
   int min = 9999, min_index; 
   
   for (int v = 0; v < vertex_count; v++) {
-    if (priority_queue[v] != -1 && key[v] < min) {
+     if (priority_queue[v] != -1 && key[v] < min) {
       min = key[v], min_index = v;
     }
   }
@@ -31,7 +31,7 @@ void print_min_span_tree(int parent[],
 } 
 
   
-void prims_min_span_tree(int** graph, int vertex_count){
+void prims_min_span_tree(int **graph, int vertex_count){
   
   /**
    * Parent's and keys
@@ -102,18 +102,13 @@ int main() {
     _graph[i] = new int[vertices];
   }
 
+  
   for(int i=0; i<vertices; i++){
     std::cout<<"Enter the connections for vertex "<<i<<" (Please separate weights by a space): ";
     for(int j=0; j<vertices; j++){
       std::cin>>_graph[i][j];
     }
   }
-  
-  // {{0, 2, 0, 6, 0}, 
-  //  {2, 0, 3, 8, 5}, 
-  //  {0, 3, 0, 0, 7}, 
-  //  {6, 8, 0, 0, 9}, 
-  //  {0, 5, 7, 9, 0}}; 
   
   prims_min_span_tree(_graph, vertices); 
   
