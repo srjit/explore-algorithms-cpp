@@ -21,11 +21,12 @@ int get_min_key(int key[], int priority_queue[], int vertex_count){
 void print_min_span_tree(int parent[],
 			 int vertex_count,
 			 int **graph) {
-  
-  printf("Edge  \tWeight of Edge\n");
+
+  std::cout<<"Edges\n";
+  std::cout<<"Vertex1"<<"\t"<<"Vertex2"<<"\n";
   
   for (int i = 1; i <  vertex_count; i++) {
-    printf("%d - %d \t%d \n", parent[i], i, graph[i][parent[i]]);
+    std::cout<<parent[i]<<"\t"<<i<<"\t"<<"\n";
   }
   
 } 
@@ -38,7 +39,10 @@ void prims_min_span_tree(int **graph, int vertex_count){
    */
   int parent[vertex_count];  
   int key[vertex_count];
-    
+
+  /**
+   *  Using an array for the priority queue
+   */
   int priority_queue[vertex_count];  
   
   /**
